@@ -11,14 +11,15 @@ chrome = webdriver.Chrome(
 chrome.get("https://egrp365.ru/")
 page = QuotesPage(chrome)
 
-address = "г Казань, Зинина, 2"
-# page.data_search(address)
-# time.sleep(4)
-# print(page.quotes)
-# time.sleep(6)
+address = "г Казань, Зинина, 2"  # тестовый адрес
 
 
-def get_data(address):
+
+def get_data(address):   
+    '''
+    Функция для обработки полученных результатов скрейпинга
+    Сохраняет нужные данные в переменные для передачи в БД
+    '''
     scrapped_data = page.search_for_info(address)
     print(scrapped_data)
     full_json = ''
@@ -26,7 +27,7 @@ def get_data(address):
         new_data = str(data).replace('\'', '\"').replace(
             'None', '"None"')  # to convert to json
 
-        res = json.loads(new_data)
+        res = json.loads(new_data)# создает в таблицу для хранения строк поиска
         print(res)
 
         if 'Почтовый адрес' in str(data):
@@ -51,7 +52,7 @@ def get_data(address):
     return cadast_num, found_address, cadast_link, full_json
 
 
-def create_search_table():
+def create_search_table():  # создает в таблицу для хранения результата поиска
     connection = sqlite3.connect('data.db')
     cursor = connection.cursor()
     cursor.execute(
@@ -60,7 +61,7 @@ def create_search_table():
     connection.close()
 
 
-def create_requests_table():
+def create_requests_table(): # создает в таблицу для хранения строк поиска
     connection = sqlite3.connect('data.db')
     cursor = connection.cursor()
     cursor.execute(
@@ -69,7 +70,7 @@ def create_requests_table():
     connection.close()
 
 
-def add_search_result(cadast_num, found_address, cadast_link, full_json, address):
+def add_search_result(cadast_num, found_address, cadast_link, full_json, address): # добавить в таблицу результат поиска
     connection = sqlite3.connect('data.db')
     cursor = connection.cursor()
     cursor.execute('INSERT INTO property VALUES(NULL,?,?,?,?,?)',
@@ -78,7 +79,7 @@ def add_search_result(cadast_num, found_address, cadast_link, full_json, address
     connection.close()
 
 
-def add_requests(address):
+def add_requests(address):  # добавить в таблицу строку поиска
     connection = sqlite3.connect('data.db')
     cursor = connection.cursor()
     cursor.execute(
@@ -121,7 +122,7 @@ def main():
     add_search_result(cadast_num, found_address,
                       cadast_link, full_json, address)
     mached_address()
-    # requests_notfound()
+    requests_notfound()
 
 
 main()
