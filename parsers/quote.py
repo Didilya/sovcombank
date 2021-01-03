@@ -4,6 +4,8 @@ from selenium.common.exceptions import NoSuchElementException
 import json
 from typing import Dict
 
+""" Данный модуль предназначен для парсинга полученной  информации с сайта   """
+
 
 class QuoteParser:
     """
@@ -14,12 +16,10 @@ class QuoteParser:
     def __init__(self, parent):
         self.parent = parent
 
-    # def __repr__(self):
     def __repr__(self):
         diction = {self.content: self.author, 'link': self.tags}
-        # print(diction)
         result = str(diction)
-        #print(f'<name {self.content}, data {self.author}, link {self.tags}>')
+
         return result
 
     @ property
@@ -27,16 +27,16 @@ class QuoteParser:
         locator = QuoteLocators.CONTENT
         try:
             return self.parent.find_element_by_tag_name(locator).text
-        except NoSuchElementException:  # spelling error making this code not work as expected
+        except NoSuchElementException:
             pass
 
     @ property
     def author(self):
         locator = QuoteLocators.AUTHOR
-       # return self.parent.find_element_by_css_selector(locator).text
+
         try:
             return self.parent.find_element_by_tag_name(locator).text
-        except NoSuchElementException:  # spelling error making this code not work as expected
+        except NoSuchElementException:
             pass
 
     @ property
@@ -44,5 +44,5 @@ class QuoteParser:
         locator = QuoteLocators.TAGS
         try:
             return self.parent.find_element_by_css_selector(locator).get_attribute('href')
-        except NoSuchElementException:  # spelling error making this code not work as expected
+        except NoSuchElementException:
             pass
